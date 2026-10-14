@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ctor_EvarrException",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ctor_EvarrException",
+  "parent":{
+    "name":"Evarr",
+    "path":"folders/_Packages/Alphish/Evarr.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
