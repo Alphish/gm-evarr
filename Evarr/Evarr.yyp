@@ -9,7 +9,11 @@
     "name":"Default",
   },
   "defaultScriptType":1,
-  "Folders":[],
+  "Folders":[
+    {"$GMFolder":"","%Name":"_Packages","folderPath":"folders/_Packages.yy","name":"_Packages","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Alphish","folderPath":"folders/_Packages/Alphish.yy","name":"Alphish","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Evarr","folderPath":"folders/_Packages/Alphish/Evarr.yy","name":"Evarr","resourceType":"GMFolder","resourceVersion":"2.0",},
+  ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[],
   "isEcma":false,
@@ -20,6 +24,10 @@
   "name":"Evarr",
   "resources":[
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"ctor_EvarrBinaryOperator","path":"scripts/ctor_EvarrBinaryOperator/ctor_EvarrBinaryOperator.yy",},},
+    {"id":{"name":"ctor_EvarrEvaluation","path":"scripts/ctor_EvarrEvaluation/ctor_EvarrEvaluation.yy",},},
+    {"id":{"name":"ctor_EvarrException","path":"scripts/ctor_EvarrException/ctor_EvarrException.yy",},},
+    {"id":{"name":"ctor_EvarrOperator","path":"scripts/ctor_EvarrOperator/ctor_EvarrOperator.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
