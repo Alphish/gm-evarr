@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ctor_EvarrOperator",
   "parent":{
-    "name":"Evarr",
-    "path":"folders/_Packages/Alphish/Evarr.yy",
+    "name":"Operators",
+    "path":"folders/_Packages/Alphish/Evarr/Operators.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
