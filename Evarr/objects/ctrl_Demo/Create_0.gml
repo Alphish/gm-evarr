@@ -1,7 +1,12 @@
-// 2 + 3 * 4 + 5 =>
-// 2 3 4 * + 5 +
-var _plus = new EvarrBinaryOperator("+", function(_left, _right) { return _left + _right; });
-var _times = new EvarrBinaryOperator("*", function(_left, _right) { return _left * _right; });
-var _expression = [2, 3, 4, _times, _plus, 5, _plus];
+var _grammar = new EvarrGrammar().with_arithmetic_operators();
+
+var _expression = new EvarrBuilder(_grammar)
+    .inval(2).inop("+")                                         // 2 +
+    .open_group().inval(9).inop("/").inval(3).close_group()     // (9 / 3)
+    .inop("*")                                                  // *
+    .open_group().inval(4).inop("-").inval(5).close_group()     // (4 - 5)
+    .complete();
+
 var _evaluation = new EvarrEvaluation(_expression);
+
 result = _evaluation.evaluate();
