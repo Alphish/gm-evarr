@@ -1,7 +1,7 @@
 /// @desc An operator taking two operands, like arithmetics or relations.
 /// @arg {String} symbol            The symbol identifying the operator.
 /// @arg {Function} operation       The function producing a result from the input operands.
-function EvarrBinaryOperator(_symbol, _operation) : EvarrOperator(_symbol) constructor {
+function EvarrBinaryOperator(_symbol, _operation) : EvarrOperator(_symbol, 2, 1) constructor {
     /// @ignore
     operation = _operation;
     
