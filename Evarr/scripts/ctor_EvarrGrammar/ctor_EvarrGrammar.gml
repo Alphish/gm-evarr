@@ -11,6 +11,10 @@ function EvarrGrammar() constructor {
     /// @ignore
     operators_by_symbol = {};
     
+    /// @desc The operator used for referencing values.
+    /// @arg {Struct.EvarrReferenceOperator}
+    reference_operator = undefined;
+    
     /// @desc Adds one or more precedence layers, with the earlier layers taking precedence over later ones.
     /// @arg {String} layer             The first layer to declare.
     /// @arg {String} [...rest]         The remaining layers, if any.
@@ -48,6 +52,18 @@ function EvarrGrammar() constructor {
         _precedence = get_precedence_value(_precedence ?? _type);
         var _grammar_operator = new EvarrGrammarOperator(self, _operator, _type, _precedence);
         operators_by_symbol[$ _operator.symbol] = _grammar_operator;
+        return self;
+    }
+    
+    /// @desc Defines a basic value reference operator within the grammar.
+    /// @arg {String} [symbol]                      The symbol to associate the reference operator with.
+    /// @returns {Struct.EvarrGrammar}
+    static with_reference_operator = function(_symbol = "@") {
+        var _reference_operator = new EvarrReferenceOperator(_symbol);
+        var _precedence = undefined; // the reference operator has no precedence, as it skips the store-and-resolve-later process altogether
+        var _grammar_operator = new EvarrGrammarOperator(self, _reference_operator, "reference", _precedence);
+        reference_operator = _grammar_operator;
+        operators_by_symbol[$ _symbol] = _grammar_operator;
         return self;
     }
     

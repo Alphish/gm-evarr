@@ -25,6 +25,22 @@ function EvarrBuilder(_grammar) constructor {
         return self;
     }
     
+    /// @desc Inputs a context value reference to be added to the stack.
+    /// @arg {Any} key          The value reference key.
+    /// @returns {Struct.EvarrBuilder}
+    static input_reference = function(_key) {
+        return inref(_key);
+    }
+    
+    /// @desc Inputs a context value reference to be added to the stack.
+    /// @arg {Any} key          The value reference key.
+    /// @returns {Struct.EvarrBuilder}
+    static inref = function(_key) {
+        current_group.push_expression_operator(grammar.reference_operator.expression_operator);
+        current_group.push_operator_argument(_key);
+        return self;
+    }
+    
     /// @desc Inputs a gramamr operator with the given symbol. The operator will be applied to the expression later, depending on the grammar rules.
     /// @arg {Any} symbol       The symbol of the operator to enter.
     /// @returns {Struct.EvarrBuilder}
