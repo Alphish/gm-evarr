@@ -56,6 +56,12 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         return false;
     }
     
+    /// @desc Takes the next expression item and advances. Can be used for parameterised operators.
+    /// @returns {Any}
+    static take_item = function() {
+        return expression[index++];
+    }
+    
     /// @desc Stores an intermediate value for later processing.
     static push_value = function(_value) {
         stack[stack_count++] = _value;
