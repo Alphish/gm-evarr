@@ -16,14 +16,14 @@ function EvarrBuilderGroup(_parent, _expression) constructor {
     
     /// @desc Adds the given operand at the end of the built expression.
     /// @arg {Any} operand
-    push_operand = function(_operand) {
+    static push_operand = function(_operand) {
         array_push(expression, _operand);
         stack_balance += 1;
     }
     
     /// @desc Adds the given expression operator at the end of the built expression.
     /// @arg {Struct.EvarrOperator} operator
-    push_expression_operator = function(_operator) {
+    static push_expression_operator = function(_operator) {
         array_push(expression, _operator);
         stack_balance -= _operator.arity;
         if (stack_balance < 0)
@@ -32,9 +32,15 @@ function EvarrBuilderGroup(_parent, _expression) constructor {
         stack_balance += _operator.coarity;
     }
     
+    /// @desc Adds the given operator argument to the expression.
+    /// @arg {Any} arg
+    static push_operator_argument = function(_arg) {
+        array_push(expression, _arg);
+    }
+    
     /// @desc Handles the given grammar operator, potentially resolving some pending operators before it and storing it for later.
     /// @arg {Struct.EvarrGrammarOperator} operator
-    handle_grammar_operator = function(_operator) {
+    static handle_grammar_operator = function(_operator) {
         var _pending = array_last(pending_operators);
         while (!is_undefined(_pending) && _pending.grammar.should_resolve_pending_operator(_operator, _pending)) {
             array_pop(pending_operators);
@@ -47,13 +53,13 @@ function EvarrBuilderGroup(_parent, _expression) constructor {
     
     /// @desc Creates a nested builder group.
     /// @returns {Struct.EvarrBuilderGroup}
-    open_nested = function() {
+    static open_nested = function() {
         return new EvarrBuilderGroup(self, expression);
     }
     
     /// @desc Closes the group and resolves any remaining operators.
     /// @returns {Struct.EvarrBuilderGroup}
-    close = function() {
+    static close = function() {
         // resolve the remaining operators; no sane operator should be applied outside its expression group
         for (var i = array_length(pending_operators) - 1; i >= 0; i--) {
             pending_operators[i].resolve(self);
