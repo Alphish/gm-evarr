@@ -26,6 +26,16 @@ EvarrException.not_implemented = function(_context, _method) {
         );
 }
 
+/// @desc Creates an Evarr unknown value exception, thrown when attempting to access a value not available in the evaluation context.
+/// @arg {String} key                   The key of the referenced value.
+/// @returns {Struct.EvarrException}
+EvarrException.unknown_value = function(_key) {
+    return new EvarrException(
+        nameof(unknown_value),
+        $"Could not resolve a value reference to '{_key}'."
+        );
+}
+
 /// @desc Creates an Evarr grammar unknown precedence exception, thrown when the given precedence could not be resolved.
 /// @arg {Any} precedence               The precedence given to resolve.
 /// @returns {Struct.EvarrException}

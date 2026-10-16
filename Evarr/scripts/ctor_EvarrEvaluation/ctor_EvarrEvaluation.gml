@@ -1,9 +1,14 @@
 /// @desc The expression evaluation process.
-/// @arg {Array} expression         The expression being evaluated.
-function EvarrEvaluation(_expression) constructor {
+/// @arg {Array} expression                 The expression being evaluated.
+/// @arg {Struct.EvarrContext} context      The evaluation context.
+function EvarrEvaluation(_expression, _context = undefined) constructor {
     /// @desc The expression being evaluated.
     /// @returns {Array}
     expression = _expression;
+    
+    /// @desc The evaluation context.
+    /// @returns {Struct.EvarrContext}
+    context = _context;
     
     /// @desc Indicates the evaluation status; 0 when in progress, positive when completed, negative when failed.
     /// @returns {Real}

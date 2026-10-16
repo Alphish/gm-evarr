@@ -31,6 +31,7 @@
     {"id":{"name":"ctor_EvarrBinaryOperator","path":"scripts/ctor_EvarrBinaryOperator/ctor_EvarrBinaryOperator.yy",},},
     {"id":{"name":"ctor_EvarrBuilder","path":"scripts/ctor_EvarrBuilder/ctor_EvarrBuilder.yy",},},
     {"id":{"name":"ctor_EvarrBuilderGroup","path":"scripts/ctor_EvarrBuilderGroup/ctor_EvarrBuilderGroup.yy",},},
+    {"id":{"name":"ctor_EvarrContext","path":"scripts/ctor_EvarrContext/ctor_EvarrContext.yy",},},
     {"id":{"name":"ctor_EvarrEvaluation","path":"scripts/ctor_EvarrEvaluation/ctor_EvarrEvaluation.yy",},},
     {"id":{"name":"ctor_EvarrException","path":"scripts/ctor_EvarrException/ctor_EvarrException.yy",},},
     {"id":{"name":"ctor_EvarrGrammar","path":"scripts/ctor_EvarrGrammar/ctor_EvarrGrammar.yy",},},
