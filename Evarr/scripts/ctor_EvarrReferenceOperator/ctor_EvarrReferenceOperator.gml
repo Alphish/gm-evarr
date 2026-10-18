@@ -6,7 +6,7 @@ function EvarrReferenceOperator(_symbol) : EvarrOperator(_symbol, 0, 1) construc
     /// @arg {Struct.EvarrEvaluation} evaluation    The evaluation to resolve the reference of.
     static apply = function(_evaluation) {
         var _key = _evaluation.take_item();
-        var _result = _evaluation.context.get_value(_key);
-        _evaluation.push_value(_result);
+        var _reference = new EvarrContextReference(_evaluation.context, _key);
+        _evaluation.push_value(_reference);
     }
 }
