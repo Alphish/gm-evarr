@@ -7,3 +7,5 @@ draw_text(room_width div 2, room_height div 2 - 60, $"2 + (9 / 3) * (4 - 5) = {r
 
 draw_text(room_width div 2, room_height div 2, $"dist(t=10, acc=1, v0=0) = {distance_1}");
 draw_text(room_width div 2, room_height div 2 + 40, $"dist(t=5, acc=3, v0=5) = {distance_2}");
+
+draw_text(room_width div 2, room_height div 2 + 80, $"counter = {counter_context.values.counter}");

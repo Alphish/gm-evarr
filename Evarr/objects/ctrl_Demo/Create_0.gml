@@ -1,6 +1,7 @@
 var _grammar = new EvarrGrammar()
     .with_reference_operator()
-    .with_arithmetic_operators();
+    .with_arithmetic_operators()
+    .with_assignment_operator("=");
 
 // evaluating a constant expression
 
@@ -29,3 +30,11 @@ distance_1 = new EvarrEvaluation(_distance_formula, _ctx1).evaluate();
 
 var _ctx2 = new EvarrContext({ t: 5, acc: 3, v0: 5 });
 distance_2 = new EvarrEvaluation(_distance_formula, _ctx2).evaluate();
+
+// counter
+counter_context = new EvarrContext({ counter: 0 });
+counter_setters = [];
+
+for (var i = 0; i <= 9; i++) {
+    counter_setters[i] = new EvarrBuilder(_grammar).inref("counter").inop("=").inval(i).complete();
+}
