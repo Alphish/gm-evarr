@@ -29,14 +29,14 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
     count = array_length(expression);
     
     /// @ignore
-    stack = undefined;
+    operand_stack = undefined;
     
     /// @ignore
-    stack_count = 0;
+    operand_stack_count = 0;
     
-    /// @desc Prepares the values stack for evaluation.
+    /// @desc Prepares the operand stack for evaluation.
     static init = function() {
-        stack = [];
+        operand_stack = [];
     }
     
     /// @desc Processes the next expression item.
@@ -51,9 +51,15 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         if (is_instanceof(_item, EvarrOperator))
             _item.apply(self); // process the operator
         else
-            stack[stack_count++] = _item; // push the non-operator value onto a stack
+            operand_stack[operand_stack_count++] = _item; // push the non-operator value onto a stack
         
         return false;
+    }
+    
+    /// @ignore
+    static handle_exception = function(_exception) {
+        error = _exception;
+        status = -1;
     }
     
     /// @desc Takes the next expression item and advances. Can be used for parameterised operators.
@@ -64,31 +70,46 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
     
     /// @desc Stores an intermediate value for later processing.
     static push_value = function(_value) {
-        stack[stack_count++] = _value;
+        operand_stack[operand_stack_count++] = _value;
     }
     
-    /// @desc Removes and returns the topmost intermediate value.
+    /// @desc Removes and returns the topmost intermediate operand from the evaluation stack.
+    /// @returns {Any}
+    static pop_operand = function() {
+        if (operand_stack_count == 0)
+            throw EvarrException.operand_stack_empty();
+        
+        var _operand = operand_stack[operand_stack_count - 1];
+        operand_stack[--operand_stack_count] = undefined;
+        return _operand;
+    }
+    
+    /// @desc Removes and returns the topmost intermediate value from the evaluation stack.
     /// @returns {Any}
     static pop_value = function() {
-        if (stack_count == 0) {
-            status = -1;
-            error = "The operation requires more operands than available.";
-            return undefined;
-        }
+        var _operand = pop_operand();
+        return is_instanceof(_operand, EvarrReference) ? _operand.get_value(self) : _operand;
+    }
+    
+    /// @desc Removes and returns the topmost intermediate assignable reference from the evaluation stack.
+    /// @returns {Any}
+    static pop_reference = function() {
+        var _operand = pop_operand();
+        if (!is_instanceof(_operand, EvarrReference))
+            throw EvarrException.operand_not_assignable();
         
-        var _value = stack[stack_count - 1];
-        stack[--stack_count] = undefined;
-        return _value;
+        return _operand;
     }
     
     /// @ignore
     static complete = function() {
-        if (stack_count > 1) {
+        if (operand_stack_count > 1) {
             status = -1;
             error = "Incomplete evaluation: more than one value remains in the stack.";
         } else {
             status = 1;
-            result = stack_count == 1 ? stack[0] : undefined;
+            if (operand_stack_count == 1)
+                result = pop_value();
         }
         return true;
     }
@@ -99,16 +120,21 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         if (status != 0)
             return result;
         
-        if (is_undefined(stack))
+        if (is_undefined(operand_stack))
             init();
         
-        while (!process_step()) {}
+        try {
+            while (!process_step()) {}
+        } catch (_exception) {
+            handle_exception(_exception);
+        }
+        
         return result;
     }
     
     /// @desc Gets the current estimated evaluation progress.
     /// @returns {Real}
-    static get_progress_value = function() {
+    static get_progress_current = function() {
         return index;
     }
     
@@ -126,10 +152,10 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
     
     /// @desc Cleans up the processing stack.
     static cleanup = function() {
-        if (is_undefined(stack))
+        if (is_undefined(operand_stack))
             return;
         
-        array_resize(stack, 0); // eagerly releasing the stack array memory
-        stack = undefined; // dereferencing the stack array
+        array_resize(operand_stack, 0); // eagerly releasing the stack array memory
+        operand_stack = undefined; // dereferencing the stack array
     }
 }

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ctor_EvarrContext",
   "parent":{
-    "name":"Evarr",
-    "path":"folders/_Packages/Alphish/Evarr.yy",
+    "name":"State",
+    "path":"folders/_Packages/Alphish/Evarr/State.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

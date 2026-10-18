@@ -1,4 +1,4 @@
-// Verry tempted to call it EvarrGrammarr, but I will resist
+// Verry tempted to call it EvarrGrammarr, but I will rresist
 
 /// @desc Represents a grammar with operators of specific precedence and resolution rules.
 function EvarrGrammar() constructor {
@@ -20,9 +20,15 @@ function EvarrGrammar() constructor {
     /// @arg {String} [...rest]         The remaining layers, if any.
     /// @returns {Struct.EvarrGrammar}
     static with_precedence_layers = function(_layer) {
-        precedences_by_layer[$ _layer] = -array_length(precedence_layers);
-        array_push(precedence_layers, _layer);
+        if (!struct_exists(precedences_by_layer, _layer)) {
+            precedences_by_layer[$ _layer] = -array_length(precedence_layers);
+            array_push(precedence_layers, _layer);
+        }
+        
         for (var i = 1; i < argument_count; i++) {
+            if (struct_exists(precedences_by_layer, argument[i]))
+                continue;
+            
             precedences_by_layer[$ argument[i]] = -array_length(precedence_layers);
             array_push(precedence_layers, argument[i]);
         }
@@ -47,10 +53,11 @@ function EvarrGrammar() constructor {
     /// @arg {Struct.EvarrOperator} operator        The underlying expression operator to use in the grammar.
     /// @arg {String} type                          The type of the grammar operator.
     /// @arg {Any} [precedence]                     The operator precedence; if not specified, the type will be used.
+    /// @arg {Bool} [associativity]                 Whether the operator should be left-associative (false) or right-associative (true).
     /// @returns {Struct.EvarrGrammar}
-    static with_operator = function(_operator, _type, _precedence = undefined) {
+    static with_operator = function(_operator, _type, _precedence = undefined, _associativity = false) {
         _precedence = get_precedence_value(_precedence ?? _type);
-        var _grammar_operator = new EvarrGrammarOperator(self, _operator, _type, _precedence);
+        var _grammar_operator = new EvarrGrammarOperator(self, _operator, _type, _precedence, _associativity);
         operators_by_symbol[$ _operator.symbol] = _grammar_operator;
         return self;
     }
@@ -75,7 +82,7 @@ function EvarrGrammar() constructor {
     /// @returns {Struct.EvarrGrammar}
     static with_binary_operator = function(_symbol, _operation, _type, _precedence = undefined) {
         var _operator = new EvarrBinaryOperator(_symbol, _operation);
-        return with_operator(_operator, _type, _precedence);
+        return with_operator(_operator, _type, _precedence, /* right-assicative */ false);
     }
     
     /// @desc Defines addition, subtraction, multiplication and division operators within the grammar. If needed, layers for addition and multiplication are declared.
@@ -83,16 +90,25 @@ function EvarrGrammar() constructor {
     /// @arg {String} [multtype]                    The type/layer of the multiplication and division operators; "multiplication" by default.
     /// @returns {Struct.EvarrGrammar}
     static with_arithmetic_operators = function(_addtype = "addition", _multtype = "multiplication") {
-        if (!struct_exists(precedences_by_layer, _multtype))
-            with_precedence_layers(_multtype);
-        
-        if (!struct_exists(precedences_by_layer, _addtype))
-            with_precedence_layers(_addtype);
+        with_precedence_layers(_multtype, _addtype);
         
         return with_binary_operator("+", function(_left, _right) { return _left + _right; }, _addtype)
             .with_binary_operator("-", function(_left, _right) { return _left - _right; }, _addtype)
             .with_binary_operator("*", function(_left, _right) { return _left * _right; }, _multtype)
             .with_binary_operator("/", function(_left, _right) { return _left / _right; }, _multtype);
+    }
+    
+    /// @desc Defines a grammar assignment operator with the given type and optional precedence. If no operation is specified, a direct assignment will be defined.
+    /// @arg {String} symbol                        The symbol of the operator.
+    /// @arg {Function} [operation]                 The optional operation to produce the assigned value based on both left and right hand sides.
+    /// @arg {String} [type]                        The type of the grammar operator.
+    /// @arg {Any} [precedence]                     The operator precedence; if not specified, the type will be used.
+    /// @returns {Struct.EvarrGrammar}
+    static with_assignment_operator = function(_symbol, _operation = undefined, _type = "assignment", _precedence = undefined) {
+        with_precedence_layers(_type);
+        
+        var _operator = new EvarrAssignmentOperator(_symbol, _operation);
+        return with_operator(_operator, _type, _precedence, /* right-assicative */ true);
     }
     
     /// @desc Retrieves the grammar operator associated with the given symbol.
@@ -106,11 +122,13 @@ function EvarrGrammar() constructor {
         return _operator;
     }
     
-    /// @desc Determines whether the incoming operator should cause the resolution of the topmost pending operator. By default, it largely relies on precedence. Can be overriden.
+    /// @desc Determines whether the incoming operator should cause the resolution of the topmost pending operator. By default, it relies on precedence and associativity. Can be overriden.
     /// @arg {Struct.EvarrGrammarOperator} incoming
     /// @arg {Struct.EvarrGrammarOperator} pending
     /// @returns {Bool}
     static should_resolve_pending_operator = function(_incoming, _pending) {
-        return _pending.precedence >= _incoming.precedence;
+        return _pending.right_associative
+            ? _pending.precedence > _incoming.precedence
+            : _pending.precedence >= _incoming.precedence;
     }
 }

@@ -26,6 +26,24 @@ EvarrException.not_implemented = function(_context, _method) {
         );
 }
 
+/// @desc Creates an Evarr operand stack empty exception, thrown when an operator requests an operand when no more are available.
+/// @returns {Struct.EvarrException}
+EvarrException.operand_stack_empty = function() {
+    return new EvarrException(
+        nameof(operand_stack_empty),
+        $"An operand from the evaluation stack was requested, but no more operands are available."
+        );
+}
+
+/// @desc Creates an Evarr operand not assignable exception, thrown when an operator requests an assignable reference, but receives a fixed or computed value instead.
+/// @returns {Struct.EvarrException}
+EvarrException.operand_not_assignable = function() {
+    return new EvarrException(
+        nameof(operand_not_assignable),
+        $"An assignable reference was expected, but the evaluation stack had a fixed or computed value instead."
+        );
+}
+
 /// @desc Creates an Evarr unknown value exception, thrown when attempting to access a value not available in the evaluation context.
 /// @arg {String} key                   The key of the referenced value.
 /// @returns {Struct.EvarrException}

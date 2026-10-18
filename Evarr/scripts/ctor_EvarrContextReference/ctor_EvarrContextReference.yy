@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ctor_EvarrContextReference",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ctor_EvarrContextReference",
+  "parent":{
+    "name":"State",
+    "path":"folders/_Packages/Alphish/Evarr/State.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
