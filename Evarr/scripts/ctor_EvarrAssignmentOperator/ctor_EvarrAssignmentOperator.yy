@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ctor_EvarrAssignmentOperator",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ctor_EvarrAssignmentOperator",
+  "parent":{
+    "name":"Operators",
+    "path":"folders/_Packages/Alphish/Evarr/Operators.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
