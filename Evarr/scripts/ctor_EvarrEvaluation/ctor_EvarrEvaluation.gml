@@ -56,6 +56,12 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         return false;
     }
     
+    /// @ignore
+    static handle_exception = function(_exception) {
+        error = _exception;
+        status = -1;
+    }
+    
     /// @desc Takes the next expression item and advances. Can be used for parameterised operators.
     /// @returns {Any}
     static take_item = function() {
@@ -102,7 +108,12 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         if (is_undefined(stack))
             init();
         
-        while (!process_step()) {}
+        try {
+            while (!process_step()) {}
+        } catch (_exception) {
+            handle_exception(_exception);
+        }
+        
         return result;
     }
     
