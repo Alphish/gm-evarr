@@ -68,6 +68,12 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         return expression[index++];
     }
     
+    /// @desc Skips the given number of evaluated expression items.
+    /// @arg {Real} count           The number of items to skip.
+    static jump_by = function(_count) {
+        index += _count;
+    }
+    
     /// @desc Stores an intermediate value for later processing.
     static push_value = function(_value) {
         operand_stack[operand_stack_count++] = _value;
@@ -114,7 +120,7 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         return true;
     }
     
-    /// @desc Immediately evaluates the remained of the expression and returns the result, if any.
+    /// @desc Immediately evaluates the remainder of the expression and returns the result, if any.
     /// @returns {Any}
     static evaluate = function() {
         if (status != 0)
