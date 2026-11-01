@@ -74,6 +74,23 @@ function EvarrGrammar() constructor {
         return self;
     }
     
+    /// @desc Defines a short-circuiting operator within the grammar.
+    /// @arg {String} [symbol]                      The symbol to associate the reference operator with.
+    /// @arg {Function} check                       The check determining if the current operand is sufficient.
+    /// @arg {String} type                          The type of the grammar operator.
+    /// @arg {Any} [precedence]                     The operator precedence; if not specified, the type will be used.
+    /// @returns {Struct.EvarrGrammar}
+    static with_short_circuit_operator = function(_symbol, _check, _type, _precedence = undefined) {
+        var _operator = new EvarrShortCircuitOperator(_symbol, _check);
+        
+        // short-circuit operators are always treated as right-associative
+        // so all the pending operators are resolved when the builder reaches the final index of the short-circuiting subexpression
+        _precedence = get_precedence_value(_precedence ?? _type);
+        var _grammar_operator = new EvarrGrammarShortCircuitOperator(self, _operator, _type, _precedence);
+        operators_by_symbol[$ _operator.symbol] = _grammar_operator;
+        return self;
+    }
+    
     /// @desc Defines a grammar binary operator with a given type. Optionally, the precedence may be specified.
     /// @arg {String} symbol                        The symbol of the operator.
     /// @arg {Function} operation                   The operation to perform on the operands.
@@ -86,16 +103,27 @@ function EvarrGrammar() constructor {
     }
     
     /// @desc Defines addition, subtraction, multiplication and division operators within the grammar. If needed, layers for addition and multiplication are declared.
-    /// @arg {String} [addtype]                     The type/layer of the addition and subtraction operators; "addition" by default.
-    /// @arg {String} [multtype]                    The type/layer of the multiplication and division operators; "multiplication" by default.
+    /// @arg {String} [multtype]                    The type/precedence layer of the multiplication and division operators; "multiplication" by default.
+    /// @arg {String} [addtype]                     The type/precedence layer of the addition and subtraction operators; "addition" by default.
     /// @returns {Struct.EvarrGrammar}
-    static with_arithmetic_operators = function(_addtype = "addition", _multtype = "multiplication") {
+    static with_arithmetic_operators = function(_multtype = "multiplication", _addtype = "addition") {
         with_precedence_layers(_multtype, _addtype);
         
         return with_binary_operator("+", function(_left, _right) { return _left + _right; }, _addtype)
             .with_binary_operator("-", function(_left, _right) { return _left - _right; }, _addtype)
             .with_binary_operator("*", function(_left, _right) { return _left * _right; }, _multtype)
             .with_binary_operator("/", function(_left, _right) { return _left / _right; }, _multtype);
+    }
+    
+    /// @desc Defines conditional AND and conditional OR operators within the grammar. If needed, corresponding layers are declared.
+    /// @arg {String} [andtype]                     The type/precedence layer of the conditional AND operator; "conditional_and" by default.
+    /// @arg {String} [ortype]                      The type/precedence layer of the conditional OR operator; "conditional_or" by default.
+    /// @returns {Struct.EvarrGrammar}
+    static with_conditional_logical_operators = function(_andtype = "conditional_and", _ortype = "conditional_or") {
+        with_precedence_layers(_andtype, _ortype);
+        
+        return with_short_circuit_operator("&&", function(_operand) { return _operand == false; }, _andtype)
+            .with_short_circuit_operator("||", function(_operand) { return _operand == true; }, _ortype);
     }
     
     /// @desc Defines a grammar assignment operator with the given type and optional precedence. If no operation is specified, a direct assignment will be defined.

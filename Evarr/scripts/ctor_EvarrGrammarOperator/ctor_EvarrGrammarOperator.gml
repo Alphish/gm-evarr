@@ -1,3 +1,4 @@
+/// @desc Wraps an expresstion operator to provide some grammar-specific context and expression building logic.
 /// @arg {Struct.EvarrGrammar} grammar          The grammar the operator is defined for.
 /// @arg {Struct.EvarrOperator} exoperator      The underlying expression operator.
 /// @arg {String} type                          The type of the operator
@@ -23,6 +24,12 @@ function EvarrGrammarOperator(_grammar, _exoperator, _type, _precedence, _associ
     /// @desc Indicates whether the operator should be left-associative (evaluating same precedence operations from left to right) or right-associative (from right to left).
     /// @returns {Bool}
     right_associative = _associativity;
+    
+    /// @desc Performs immediate operator preparations. By default, no particular preparations are done.
+    /// @arg {Struct.EvarrBuilderGroup} buildgroup      The Evarr builder group the operator will be resolved for.
+    static prepare = function(_buildgroup) {
+        // nothing by default
+    }
     
     /// @desc Adds the expression operator to the built expression. Other operations may be additionally performed.
     /// @arg {Struct.EvarrBuilderGroup} buildgroup      The Evarr builder group the operator will be resolved for.
