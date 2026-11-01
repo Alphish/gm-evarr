@@ -14,6 +14,22 @@ function EvarrBuilderGroup(_parent, _expression) constructor {
     /// @ignore
     pending_operators = [];
     
+    /// @ignore
+    pending_operator_metadata = [];
+    
+    /// @desc Retrieves the index of the upcoming item of the built expression.
+    /// @returns {Real}
+    static get_head_index = function() {
+        return array_length(expression);
+    }
+    
+    /// @desc Puts the given item at the given built expression index.
+    /// @arg {Real} index           The index of the expression item.
+    /// @arg {Any} item             The item to put in the built expression.
+    static replace_item_at = function(_index, _item) {
+        expression[_index] = _item;
+    }
+    
     /// @desc Adds the given operand at the end of the built expression.
     /// @arg {Any} operand
     static push_operand = function(_operand) {
@@ -48,7 +64,20 @@ function EvarrBuilderGroup(_parent, _expression) constructor {
             _pending = array_last(pending_operators);
         }
         
+        _operator.prepare(self);
         array_push(pending_operators, _operator);
+    }
+    
+    /// @desc Prepares additional metadata to resolve the upcoming operator.
+    /// @arg {Any} metadata         The metadata entity to keep track of.
+    static prepare_operator_metadata = function(_metadata) {
+        array_push(pending_operator_metadata, _metadata);
+    }
+    
+    /// @desc Takes the latest additional metadata for operator resolution.
+    /// @returns {Any}
+    static take_operator_metadata = function() {
+        return array_pop(pending_operator_metadata);
     }
     
     /// @desc Creates a nested builder group.
