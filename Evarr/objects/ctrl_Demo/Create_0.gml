@@ -1,6 +1,7 @@
 var _grammar = new EvarrGrammar()
     .with_reference_operator()
     .with_arithmetic_operators()
+    .with_conditional_logical_operators()
     .with_assignment_operator("=");
 
 // evaluating a constant expression
@@ -37,4 +38,15 @@ counter_setters = [];
 
 for (var i = 0; i <= 9; i++) {
     counter_setters[i] = new EvarrBuilder(_grammar).inref("counter").inop("=").inval(i).complete();
+}
+
+// check
+var _test_check = new EvarrBuilder(_grammar)
+    .inref("a").inop("||").inref("b").inop("&&").inref("c").inop("||").inref("d")
+    .complete();
+
+for (var i = 0; i < 16; i++) {
+    var _ctx = new EvarrContext({ a: i % 2 == 1, b: i % 4 >= 2, c: i % 8 >= 4, d: i >= 8 });
+    var _eval = new EvarrEvaluation(_test_check, _ctx).evaluate();
+    show_debug_message($"CHECK {_ctx.values} = {_eval}");
 }
