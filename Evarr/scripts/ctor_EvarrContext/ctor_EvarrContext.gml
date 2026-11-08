@@ -15,7 +15,7 @@ function EvarrContext(_values) constructor {
     /// @returns {Any}
     static get_value = function(_key) {
         var _result = values[$ _key];
-        if (is_undefined(_result))
+        if (is_undefined(_result) && !struct_exists(values, _key))
             throw EvarrException.unknown_value(_key);
         
         return _result;
