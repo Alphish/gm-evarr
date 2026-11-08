@@ -122,8 +122,8 @@ function EvarrGrammar() constructor {
     static with_conditional_logical_operators = function(_andtype = "conditional_and", _ortype = "conditional_or") {
         with_precedence_layers(_andtype, _ortype);
         
-        return with_short_circuit_operator("&&", function(_operand) { return _operand == false; }, _andtype)
-            .with_short_circuit_operator("||", function(_operand) { return _operand == true; }, _ortype);
+        return with_short_circuit_operator("&&", function(_operand, _context) { return !_context.is_truthy(_operand); }, _andtype)
+            .with_short_circuit_operator("||", function(_operand, _context) { return _context.is_truthy(_operand); }, _ortype);
     }
     
     /// @desc Defines a grammar assignment operator with the given type and optional precedence. If no operation is specified, a direct assignment will be defined.

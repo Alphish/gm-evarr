@@ -13,7 +13,7 @@ function EvarrShortCircuitOperator(_symbol, _check) : EvarrOperator(_symbol,  1,
         if (!is_undefined(_evaluation.error))
             return; // prevent further processing when not enough operands were found
         
-        if (!check(_operand))
+        if (!check(_operand, _evaluation.context))
             return; // the operand is not sufficient, the evaluator will attempt to get the next value
         
         _evaluation.push_value(_operand);
