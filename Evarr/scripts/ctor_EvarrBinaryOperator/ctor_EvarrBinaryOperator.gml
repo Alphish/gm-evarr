@@ -15,7 +15,7 @@ function EvarrBinaryOperator(_symbol, _operation) : EvarrOperator(_symbol, 2, 1)
         if (!is_undefined(_evaluation.error))
             return; // prevent further processing when not enough operands were found
         
-        var _result = operation(_left, _right);
+        var _result = operation(_left, _right, _evaluation.context);
         _evaluation.push_value(_result);
     }
 }
