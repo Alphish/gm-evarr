@@ -46,7 +46,7 @@ var _test_check = new EvarrBuilder(_grammar)
     .complete();
 
 for (var i = 0; i < 16; i++) {
-    var _ctx = new EvarrContext({ a: i % 2 == 1, b: i % 4 >= 2, c: i % 8 >= 4, d: i >= 8 });
+    var _ctx = new EvarrContext({ a: i % 2 == 1, b: i % 4 >= 2 ? 13 : -7, c: i % 8 >= 4 ? ctrl_Demo : undefined, d: i >= 8 ? "lorem" : "" });
     var _eval = new EvarrEvaluation(_test_check, _ctx).evaluate();
     show_debug_message($"CHECK {_ctx.values} = {_eval}");
 }
