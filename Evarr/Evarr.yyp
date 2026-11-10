@@ -44,6 +44,7 @@
     {"id":{"name":"ctor_EvarrReference","path":"scripts/ctor_EvarrReference/ctor_EvarrReference.yy",},},
     {"id":{"name":"ctor_EvarrReferenceOperator","path":"scripts/ctor_EvarrReferenceOperator/ctor_EvarrReferenceOperator.yy",},},
     {"id":{"name":"ctor_EvarrShortCircuitOperator","path":"scripts/ctor_EvarrShortCircuitOperator/ctor_EvarrShortCircuitOperator.yy",},},
+    {"id":{"name":"ctor_EvarrUnaryOperator","path":"scripts/ctor_EvarrUnaryOperator/ctor_EvarrUnaryOperator.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
