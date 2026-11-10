@@ -38,14 +38,14 @@ function EvarrContext(_values) constructor {
     static is_truthy = function(_value) {
         if (is_bool(_value))
             return _value; // bools are self-explanatory
-        else if (is_undefined(_value ?? undefined) || is_nan(_value))
+        else if (is_undefined(_value ?? undefined))
             return false; // obviously bad values
         else if (is_string(_value))
             return _value != ""; // following JS convention, empty string is considered falsy
         else if (is_handle(_value))
             return _value >= 0; // zero handles can represent proper objects, too
         else if (is_numeric(_value))
-            return !!_value; // following GM idea of numerics truthiness
+            return is_nan(_value) ? false : !!_value; // following GM idea of numerics truthiness
         else
             return true; // all other types, like arrays and structs, are expected to be always truthy even if empty
     }
