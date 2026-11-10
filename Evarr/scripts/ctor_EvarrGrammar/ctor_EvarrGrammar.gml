@@ -74,6 +74,32 @@ function EvarrGrammar() constructor {
         return self;
     }
     
+    /// @desc Defines a grammar unary operator with a given type. Optionally, the precedence may be specified.
+    /// @arg {String} symbol                        The symbol of the operator.
+    /// @arg {Function} operation                   The operation to perform on the operand.
+    /// @arg {String} type                          The type of the grammar operator.
+    /// @arg {Any} [precedence]                     The operator precedence; if not specified, the type will be used.
+    /// @returns {Struct.EvarrGrammar}
+    static with_unary_operator = function(_symbol, _operation, _type, _precedence = undefined) {
+        var _operator = new EvarrUnaryOperator(_symbol, _operation);
+        
+        // since unary operator are placed before the operands and applied starting from the rightmost one,
+        // they are treated as right-associative
+        // e.g. given something like "opA opB opC operand" it will be evaluated as "opA (opB (opC operand)))"
+        return with_operator(_operator, _type, _precedence, /* right-associative */ true);
+    }
+    
+    /// @desc Defines a grammar binary operator with a given type. Optionally, the precedence may be specified.
+    /// @arg {String} symbol                        The symbol of the operator.
+    /// @arg {Function} operation                   The operation to perform on the operands.
+    /// @arg {String} type                          The type of the grammar operator.
+    /// @arg {Any} [precedence]                     The operator precedence; if not specified, the type will be used.
+    /// @returns {Struct.EvarrGrammar}
+    static with_binary_operator = function(_symbol, _operation, _type, _precedence = undefined) {
+        var _operator = new EvarrBinaryOperator(_symbol, _operation);
+        return with_operator(_operator, _type, _precedence, /* right-associative */ false);
+    }
+    
     /// @desc Defines a short-circuiting operator within the grammar.
     /// @arg {String} [symbol]                      The symbol to associate the reference operator with.
     /// @arg {Function} check                       The check determining if the current operand is sufficient.
@@ -91,15 +117,20 @@ function EvarrGrammar() constructor {
         return self;
     }
     
-    /// @desc Defines a grammar binary operator with a given type. Optionally, the precedence may be specified.
-    /// @arg {String} symbol                        The symbol of the operator.
-    /// @arg {Function} operation                   The operation to perform on the operands.
-    /// @arg {String} type                          The type of the grammar operator.
-    /// @arg {Any} [precedence]                     The operator precedence; if not specified, the type will be used.
+    /// @desc Defines the minus sign operator within the grammar. If needed, the corresponding layer is declared.
+    /// @arg {String} [type]                        The type/precedence layer of the operator; "unary" by default.
     /// @returns {Struct.EvarrGrammar}
-    static with_binary_operator = function(_symbol, _operation, _type, _precedence = undefined) {
-        var _operator = new EvarrBinaryOperator(_symbol, _operation);
-        return with_operator(_operator, _type, _precedence, /* right-assicative */ false);
+    static with_minus_sign = function(_type = "unary") {
+        with_precedence_layers(_type);
+        return with_unary_operator("-x", function(_operand) { return -_operand; }, _type)
+    }
+    
+    /// @desc Defines the logical NOT operator within the grammar. If needed, the corresponding layer is declared.
+    /// @arg {String} [type]                        The type/precedence layer of the operator; "unary" by default.
+    /// @returns {Struct.EvarrGrammar}
+    static with_logical_not = function(_type = "unary") {
+        with_precedence_layers(_type);
+        return with_unary_operator("!x", function(_operand, _context) { return !_context.is_truthy(_operand); }, _type)
     }
     
     /// @desc Defines addition, subtraction, multiplication and division operators within the grammar. If needed, layers for addition and multiplication are declared.
