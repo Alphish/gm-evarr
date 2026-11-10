@@ -1,5 +1,7 @@
 var _grammar = new EvarrGrammar()
     .with_reference_operator()
+    .with_minus_sign()
+    .with_logical_not()
     .with_arithmetic_operators()
     .with_conditional_logical_operators()
     .with_assignment_operator("=");
@@ -7,7 +9,7 @@ var _grammar = new EvarrGrammar()
 // evaluating a constant expression
 
 var _expression = new EvarrBuilder(_grammar)
-    .inval(2).inop("+")                                         // 2 +
+    .inop("-x").inval(2).inop("+")                                         // -2 +
     .open_group().inval(9).inop("/").inval(3).close_group()     // (9 / 3)
     .inop("*")                                                  // *
     .open_group().inval(4).inop("-").inval(5).close_group()     // (4 - 5)
@@ -49,4 +51,13 @@ for (var i = 0; i < 16; i++) {
     var _ctx = new EvarrContext({ a: i % 2 == 1, b: i % 4 >= 2 ? 13 : -7, c: i % 8 >= 4 ? ctrl_Demo : undefined, d: i >= 8 ? "lorem" : "" });
     var _eval = new EvarrEvaluation(_test_check, _ctx).evaluate();
     show_debug_message($"CHECK {_ctx.values} = {_eval}");
+}
+
+// booleanification
+var _values = ["", "lorem", 0, 42, []];
+var _booleanify = new EvarrBuilder(_grammar).inop("!x").inop("!x").inref("value").complete();
+for (var i = 0; i < array_length(_values); i++) {
+    var _ctx = new EvarrContext({ value: _values[i] });
+    var _eval = new EvarrEvaluation(_booleanify, _ctx).evaluate();
+    show_debug_message($"!!({_values[i]}) = {_eval ? "true" : "false"}");
 }
