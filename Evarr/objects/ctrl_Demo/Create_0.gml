@@ -1,5 +1,6 @@
 var _grammar = new EvarrGrammar()
     .with_direct_reference_operator()
+    .with_member_access_operator()
     .with_minus_sign()
     .with_logical_not()
     .with_arithmetic_operators()
@@ -61,3 +62,15 @@ for (var i = 0; i < array_length(_values); i++) {
     var _eval = new EvarrEvaluation(_booleanify, _ctx).evaluate();
     show_debug_message($"!!({_values[i]}) = {_eval ? "true" : "false"}");
 }
+
+// member access
+var _calculation_data = { inputs: { a: 12, b: 34, c: { d: 56 } }, outputs: { result: undefined } };
+var _calculation_context = new EvarrContext(_calculation_data);
+var _calc_exp = new EvarrBuilder(_grammar)
+    .inref("outputs").inmemb("result").inop("=")
+    .inref("inputs").inmemb("a").inop("+").inref("inputs").inmemb("b").inop("+").inref("inputs").inmemb("c").inmemb("d")
+    .complete();
+
+var _result = new EvarrEvaluation(_calc_exp, _calculation_context).evaluate();
+show_debug_message(_result);
+show_debug_message(_calculation_data);
