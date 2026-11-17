@@ -42,6 +42,8 @@
     {"id":{"name":"ctor_EvarrGrammarOperator","path":"scripts/ctor_EvarrGrammarOperator/ctor_EvarrGrammarOperator.yy",},},
     {"id":{"name":"ctor_EvarrGrammarPrimaryOperator","path":"scripts/ctor_EvarrGrammarPrimaryOperator/ctor_EvarrGrammarPrimaryOperator.yy",},},
     {"id":{"name":"ctor_EvarrGrammarShortCircuitOperator","path":"scripts/ctor_EvarrGrammarShortCircuitOperator/ctor_EvarrGrammarShortCircuitOperator.yy",},},
+    {"id":{"name":"ctor_EvarrMemberAccessOperator","path":"scripts/ctor_EvarrMemberAccessOperator/ctor_EvarrMemberAccessOperator.yy",},},
+    {"id":{"name":"ctor_EvarrMemberReference","path":"scripts/ctor_EvarrMemberReference/ctor_EvarrMemberReference.yy",},},
     {"id":{"name":"ctor_EvarrOperator","path":"scripts/ctor_EvarrOperator/ctor_EvarrOperator.yy",},},
     {"id":{"name":"ctor_EvarrReference","path":"scripts/ctor_EvarrReference/ctor_EvarrReference.yy",},},
     {"id":{"name":"ctor_EvarrShortCircuitOperator","path":"scripts/ctor_EvarrShortCircuitOperator/ctor_EvarrShortCircuitOperator.yy",},},

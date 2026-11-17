@@ -81,6 +81,13 @@ function EvarrGrammar() constructor {
         _operator = new EvarrDirectReferenceOperator(_symbol);
         return with_primary_operator(_operator);
     }
+    
+    /// @desc Defines a member access operator within the grammar.
+    /// @arg {String} [symbol]                      The symbol to associate the member access operator with.
+    /// @returns {Struct.EvarrGrammar}
+    static with_member_access_operator = function(_symbol = ".") {
+        _operator = new EvarrMemberAccessOperator(_symbol);
+        return with_primary_operator(_operator);
     }
     
     /// @desc Defines a grammar operator with a given type. Optionally, the precedence may be specified.
