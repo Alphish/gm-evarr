@@ -9,6 +9,7 @@ function EvarrContextReference(_context, _key) : EvarrReference() constructor {
     key = _key;
     
     /// @desc Gets the context value.
+    /// @returns {Any}
     static get_value = function() {
         return context.get_value(key);
     }

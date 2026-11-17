@@ -12,6 +12,7 @@ function EvarrGrammarShortCircuitOperator(_grammar, _exoperator, _type, _precede
         _buildgroup.push_operator_argument(undefined);
         
         _buildgroup.prepare_operator_metadata(_skip_arg_index);
+        return false;
     }
     
     /// @desc Adds the expression operator to the built expression. Other operations may be additionally performed.

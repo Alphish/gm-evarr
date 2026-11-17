@@ -3,6 +3,10 @@
 function EvarrBuilder(_grammar) constructor {
     /// @ignore
     grammar = _grammar;
+    /// @ignore
+    direct_reference_operator = grammar.try_get_operator("@");
+    /// @ignore
+    member_access_operator = grammar.try_get_operator(".");
     
     /// @ignore
     expression = [];
@@ -36,7 +40,23 @@ function EvarrBuilder(_grammar) constructor {
     /// @arg {Any} key          The value reference key.
     /// @returns {Struct.EvarrBuilder}
     static inref = function(_key) {
-        current_group.push_expression_operator(grammar.reference_operator.expression_operator);
+        current_group.handle_grammar_operator(direct_reference_operator);
+        current_group.push_operator_argument(_key);
+        return self;
+    }
+    
+    /// @desc Inputs a member access to be added to the stack.
+    /// @arg {Any} key          The name of the member.
+    /// @returns {Struct.EvarrBuilder}
+    static input_member = function(_key) {
+        return inmemb(_key);
+    }
+    
+    /// @desc Inputs a member access to be added to the stack.
+    /// @arg {Any} key          The name of the member.
+    /// @returns {Struct.EvarrBuilder}
+    static inmemb = function(_key) {
+        current_group.handle_grammar_operator(member_access_operator);
         current_group.push_operator_argument(_key);
         return self;
     }
