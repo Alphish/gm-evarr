@@ -11,9 +11,19 @@ function EvarrGrammar() constructor {
     /// @ignore
     operators_by_symbol = {};
     
-    /// @desc The operator used for referencing values.
-    /// @arg {Struct.EvarrReferenceOperator}
-    reference_operator = undefined;
+    /// @desc Resolves a precedence. A number will be passed as-is; a layer name string will be resolved to that layer's precedence.
+    /// @arg {Any} precedence           The precedence to resolve.
+    /// @returns {Real}
+    static get_precedence_value = function(_precedence) {
+        if (!is_string(_precedence))
+            return _precedence;
+        
+        var _value = precedences_by_layer[$ _precedence];
+        if (is_undefined(_value))
+            throw EvarrException.grammar_unknown_precedence(_precedence);
+        
+        return _value;
+    }
     
     /// @desc Adds one or more precedence layers, with the earlier layers taking precedence over later ones.
     /// @arg {String} layer             The first layer to declare.
@@ -35,18 +45,42 @@ function EvarrGrammar() constructor {
         return self;
     }
     
-    /// @desc Resolves a precedence. A number will be passed as-is; a layer name string will be resolved to that layer's precedence.
-    /// @arg {Any} precedence           The precedence to resolve.
-    /// @returns {Real}
-    static get_precedence_value = function(_precedence) {
-        if (!is_string(_precedence))
-            return _precedence;
+    /// @desc Retrieves the grammar operator associated with the given symbol.
+    /// @arg {String} symbol                        The symbol of the operator.
+    /// @returns {Struct.EvarrGrammarOperator}
+    static get_operator = function(_symbol) {
+        var _operator = operators_by_symbol[$ _symbol];
+        if (is_undefined(_operator))
+            throw EvarrException.grammar_unknown_operator(_symbol);
         
-        var _value = precedences_by_layer[$ _precedence];
-        if (is_undefined(_value))
-            throw EvarrException.grammar_unknown_precedence(_precedence);
-        
-        return _value;
+        return _operator;
+    }
+    
+    /// @desc Retrieves the grammar operator associated with the given symbol, if any.
+    /// @arg {String} symbol                        The symbol of the operator.
+    /// @returns {Struct.EvarrGrammarOperator}
+    static try_get_operator = function(_symbol) {
+        return operators_by_symbol[$ _symbol];
+    }
+    
+    /// @desc Defines a grammar primary operator with a given type.
+    /// @arg {Struct.EvarrOperator} operator        The underlying expression operator to use in the grammar.
+    /// @arg {String} type                          The type of the grammar operator.
+    /// @returns {Struct.EvarrGrammar}
+    static with_primary_operator = function(_operator, _type = "primary") {
+        // primary operators are resolved immediately, and as such are not subject to operator precedence
+        var _grammar_operator = new EvarrGrammarPrimaryOperator(self, _operator, _type, /* precedence */ infinity);
+        operators_by_symbol[$ _operator.symbol] = _grammar_operator;
+        return self;
+    }
+    
+    /// @desc Defines a direct value reference operator within the grammar.
+    /// @arg {String} [symbol]                      The symbol to associate the direct reference operator with.
+    /// @returns {Struct.EvarrGrammar}
+    static with_direct_reference_operator = function(_symbol = "@") {
+        _operator = new EvarrDirectReferenceOperator(_symbol);
+        return with_primary_operator(_operator);
+    }
     }
     
     /// @desc Defines a grammar operator with a given type. Optionally, the precedence may be specified.
@@ -59,18 +93,6 @@ function EvarrGrammar() constructor {
         _precedence = get_precedence_value(_precedence ?? _type);
         var _grammar_operator = new EvarrGrammarOperator(self, _operator, _type, _precedence, _associativity);
         operators_by_symbol[$ _operator.symbol] = _grammar_operator;
-        return self;
-    }
-    
-    /// @desc Defines a basic value reference operator within the grammar.
-    /// @arg {String} [symbol]                      The symbol to associate the reference operator with.
-    /// @returns {Struct.EvarrGrammar}
-    static with_reference_operator = function(_symbol = "@") {
-        var _reference_operator = new EvarrReferenceOperator(_symbol);
-        var _precedence = undefined; // the reference operator has no precedence, as it skips the store-and-resolve-later process altogether
-        var _grammar_operator = new EvarrGrammarOperator(self, _reference_operator, "reference", _precedence);
-        reference_operator = _grammar_operator;
-        operators_by_symbol[$ _symbol] = _grammar_operator;
         return self;
     }
     
@@ -168,17 +190,6 @@ function EvarrGrammar() constructor {
         
         var _operator = new EvarrAssignmentOperator(_symbol, _operation);
         return with_operator(_operator, _type, _precedence, /* right-assicative */ true);
-    }
-    
-    /// @desc Retrieves the grammar operator associated with the given symbol.
-    /// @arg {String} symbol                        The symbol of the operator.
-    /// @returns {Struct.EvarrGrammarOperator}
-    static get_operator = function(_symbol) {
-        var _operator = operators_by_symbol[$ _symbol];
-        if (is_undefined(_operator))
-            throw EvarrException.grammar_unknown_operator(_symbol);
-        
-        return _operator;
     }
     
     /// @desc Determines whether the incoming operator should cause the resolution of the topmost pending operator. By default, it relies on precedence and associativity. Can be overriden.

@@ -28,7 +28,7 @@ function EvarrGrammarOperator(_grammar, _exoperator, _type, _precedence, _associ
     /// @desc Performs immediate operator preparations. By default, no particular preparations are done.
     /// @arg {Struct.EvarrBuilderGroup} buildgroup      The Evarr builder group the operator will be resolved for.
     static prepare = function(_buildgroup) {
-        // nothing by default
+        return false;
     }
     
     /// @desc Adds the expression operator to the built expression. Other operations may be additionally performed.

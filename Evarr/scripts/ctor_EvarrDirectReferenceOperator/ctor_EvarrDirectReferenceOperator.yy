@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"ctor_EvarrReferenceOperator",
+  "%Name":"ctor_EvarrDirectReferenceOperator",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ctor_EvarrReferenceOperator",
+  "name":"ctor_EvarrDirectReferenceOperator",
   "parent":{
     "name":"Operators",
     "path":"folders/_Packages/Alphish/Evarr/Operators.yy",

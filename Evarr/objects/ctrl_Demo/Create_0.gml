@@ -1,5 +1,5 @@
 var _grammar = new EvarrGrammar()
-    .with_reference_operator()
+    .with_direct_reference_operator()
     .with_minus_sign()
     .with_logical_not()
     .with_arithmetic_operators()

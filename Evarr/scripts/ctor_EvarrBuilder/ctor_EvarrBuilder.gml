@@ -3,6 +3,8 @@
 function EvarrBuilder(_grammar) constructor {
     /// @ignore
     grammar = _grammar;
+    /// @ignore
+    direct_reference_operator = grammar.try_get_operator("@");
     
     /// @ignore
     expression = [];
@@ -36,7 +38,7 @@ function EvarrBuilder(_grammar) constructor {
     /// @arg {Any} key          The value reference key.
     /// @returns {Struct.EvarrBuilder}
     static inref = function(_key) {
-        current_group.push_expression_operator(grammar.reference_operator.expression_operator);
+        current_group.handle_grammar_operator(direct_reference_operator);
         current_group.push_operator_argument(_key);
         return self;
     }

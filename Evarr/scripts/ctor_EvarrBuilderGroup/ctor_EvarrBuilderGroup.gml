@@ -64,8 +64,9 @@ function EvarrBuilderGroup(_parent, _expression) constructor {
             _pending = array_last(pending_operators);
         }
         
-        _operator.prepare(self);
-        array_push(pending_operators, _operator);
+        var _resolved = _operator.prepare(self);
+        if (!_resolved)
+            array_push(pending_operators, _operator);
     }
     
     /// @desc Prepares additional metadata to resolve the upcoming operator.

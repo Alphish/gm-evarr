@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ctor_EvarrGrammarPrimaryOperator",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ctor_EvarrGrammarPrimaryOperator",
+  "parent":{
+    "name":"Building",
+    "path":"folders/_Packages/Alphish/Evarr/Building.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
