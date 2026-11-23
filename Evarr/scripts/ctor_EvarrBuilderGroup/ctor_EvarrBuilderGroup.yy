@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ctor_EvarrBuilderGroup",
   "parent":{
-    "name":"Building",
-    "path":"folders/_Packages/Alphish/Evarr/Building.yy",
+    "name":"Groups",
+    "path":"folders/_Packages/Alphish/Evarr/Building/Groups.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

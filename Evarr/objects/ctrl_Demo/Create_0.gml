@@ -1,6 +1,7 @@
 var _grammar = new EvarrGrammar()
     .with_direct_reference_operator()
     .with_member_access_operator()
+    .with_call_operator()
     .with_minus_sign()
     .with_logical_not()
     .with_arithmetic_operators()
@@ -11,9 +12,9 @@ var _grammar = new EvarrGrammar()
 
 var _expression = new EvarrBuilder(_grammar)
     .inop("-x").inval(2).inop("+")                                         // -2 +
-    .open_group().inval(9).inop("/").inval(3).close_group()     // (9 / 3)
+    .open_group().inval(9).inop("/").inval(3).close()     // (9 / 3)
     .inop("*")                                                  // *
-    .open_group().inval(4).inop("-").inval(5).close_group()     // (4 - 5)
+    .open_group().inval(4).inop("-").inval(5).close()     // (4 - 5)
     .complete();
 
 var _evaluation = new EvarrEvaluation(_expression);
@@ -26,7 +27,7 @@ var _distance_formula = new EvarrBuilder(_grammar)
     .open_group()                                           // (
     .inref("v0").inop("+")                                  // v0 +
     .inref("acc").inop("*").inref("t").inop("/").inval(2)   // acc * t / 2
-    .close_group()                                          // )
+    .close()                                          // )
     .complete();
 
 var _ctx1 = new EvarrContext({ t: 10, acc: 1, v0: 0 });
@@ -74,3 +75,16 @@ var _calc_exp = new EvarrBuilder(_grammar)
 var _result = new EvarrEvaluation(_calc_exp, _calculation_context).evaluate();
 show_debug_message(_result);
 show_debug_message(_calculation_data);
+
+// method calls
+var _call_data = { add: function(_left, _right) { return _left + _right; }, subtract: function(_left, _right) { return _left - _right }, constants: { ten: function() { return 10; } }, twice: function(_val) { return 2 * _val; }};
+var _call_context = new EvarrContext(_call_data);
+var _call_exp = new EvarrBuilder(_grammar)
+    .inref("add").open_apply("(...)").inref("constants").inmemb("ten").open_apply("(...)").close().separate().inref("twice").open_apply("(...)").inval(2).close().close()
+    .inop("*")
+    .inref("subtract").open_apply("(...)").inref("constants").inmemb("ten").open_apply("(...)").close().separate().inref("twice").open_apply("(...)").inval(2).close().close()
+    .complete();
+
+var _call_eval = new EvarrEvaluation(_call_exp, _call_context);
+var _call_result = _call_eval.evaluate();
+show_debug_message(_call_result);

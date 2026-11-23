@@ -14,6 +14,12 @@ function EvarrContextReference(_context, _key) : EvarrReference() constructor {
         return context.get_value(key);
     }
     
+    /// @desc Gets an unbound method from the callable value.
+    /// @returns {Function}
+    static get_method = function() {
+        return method(undefined, get_value());
+    }
+    
     /// @desc Assigns the given value to the context variable.
     /// @arg {Any} value            The new value to assign.
     static set_value = function(_value) {

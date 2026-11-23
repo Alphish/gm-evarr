@@ -15,7 +15,7 @@ function EvarrGrammarShortCircuitOperator(_grammar, _exoperator, _type, _precede
         return false;
     }
     
-    /// @desc Adds the expression operator to the built expression. Other operations may be additionally performed.
+    /// @desc Adds the short-circuiting operator to the built expression, along with the skip amount.
     /// @arg {Struct.EvarrBuilderGroup} buildgroup      The Evarr builder group the operator will be resolved for.
     static resolve = function(_buildgroup) {
         var _skip_arg_index = _buildgroup.take_operator_metadata();

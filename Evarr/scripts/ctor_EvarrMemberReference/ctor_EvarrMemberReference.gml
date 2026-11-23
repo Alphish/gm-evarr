@@ -18,6 +18,12 @@ function EvarrMemberReference(_owner, _member) : EvarrReference() constructor {
         return owner[$ member];
     }
     
+    /// @desc Gets the callable value bound to the owner.
+    /// @returns {Function|
+    static get_method = function() {
+        return method(owner, get_value());
+    }
+    
     /// @desc Assigns a new member value.
     /// @arg {Any} value            The new value to assign.
     static set_value = function(_value) {

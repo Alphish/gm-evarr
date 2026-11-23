@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ctor_EvarrBuilderSubexpression",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ctor_EvarrBuilderSubexpression",
+  "parent":{
+    "name":"Groups",
+    "path":"folders/_Packages/Alphish/Evarr/Building/Groups.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -107,6 +107,23 @@ function EvarrEvaluation(_expression, _context = undefined) constructor {
         return _operand;
     }
     
+    /// @desc Prepares argument terms for the given arity, then applies the given operation on the arguments and the source preceding them.
+    /// @arg {Function} operation       The operation to apply on the given source and arguments.
+    /// @arg {Real} arity               The number of terms passed as operation arguments.
+    static apply_args = function(_operation, _arity) {
+        for (var i = operand_stack_count - _arity; i < operand_stack_count; i++) {
+            var _arg = operand_stack[i];
+            if (is_instanceof(_arg, EvarrReference))
+                operand_stack[i] = _arg.get_value(self);
+        }
+        
+        var _source_pos = operand_stack_count - _arity - 1;
+        var _source = operand_stack[_source_pos];
+        
+        operand_stack[_source_pos] = _operation(_source, self, _arity);
+        operand_stack_count -= _arity;
+    }
+    
     /// @ignore
     static complete = function() {
         if (operand_stack_count > 1) {

@@ -1,9 +1,9 @@
 /// @desc An individual builder group, serving as a context for accumulating values and resolving grammar operators.
-/// @arg {Struct.EvarrBuilderGroup} parent          The parent builder group. Set to undefined in the top-level group.
-/// @arg {Array} expression                         The expression being built.
-function EvarrBuilderGroup(_parent, _expression) constructor {
-    /// @ignore
-    parent = _parent;
+/// @arg {Array} expression                             The expression being built.
+function EvarrBuilderGroup(_expression) constructor {
+    /// @desc The parent expression builder group, if any.
+    /// @returns {Struct.EvarrBuilderGroup}
+    parent = undefined;
     
     /// @ignore
     expression = _expression;
@@ -81,31 +81,41 @@ function EvarrBuilderGroup(_parent, _expression) constructor {
         return array_pop(pending_operator_metadata);
     }
     
-    /// @desc Creates a nested builder group.
-    /// @returns {Struct.EvarrBuilderGroup}
-    static open_nested = function() {
-        return new EvarrBuilderGroup(self, expression);
+    /// @desc Creates a nested subexpression builder.
+    /// @returns {Struct.EvarrBuilderSubexpression}
+    static open_subexpression = function() {
+        return new EvarrBuilderSubexpression(self);
     }
     
-    /// @desc Closes the group and resolves any remaining operators.
+    /// @desc Creates a nested apply sequence builder.
+    /// @returns {Struct.EvarrBuilderSequence}
+    static open_apply = function(_operator) {
+        return new EvarrBuilderSequence(self, _operator);
+    }
+    
+    /// @desc Separates the current subexpression from a subsequent one. Only supported in sequence-based expression builder groups.
+    static separate = function() {
+        throw EvarrException.not_supported(self, nameof(separate));
+    }
+    
+    /// @desc Closes the group and goes back to the parent.
     /// @returns {Struct.EvarrBuilderGroup}
     static close = function() {
-        // resolve the remaining operators; no sane operator should be applied outside its expression group
+        resolve_remaining_operators();
+        complete_close();
+        pending_operators = undefined;
+        return parent; // return the parent to build the expression with from now on
+    }
+    
+    /// @ignore
+    static resolve_remaining_operators = function() {
         for (var i = array_length(pending_operators) - 1; i >= 0; i--) {
             pending_operators[i].resolve(self);
         }
-        pending_operators = undefined;
-        
-        // ensure there are no problems with the stack balance
-        var _has_parent = !is_undefined(parent);
-        if (!_has_parent && stack_balance > 1)
-            throw EvarrException.builder_balance_closing_expression(stack_balance);
-        else if (_has_parent && stack_balance != 1)
-            throw EvarrException.builder_balance_closing_group(stack_balance);
-        
-        if (_has_parent)
-            parent.stack_balance += 1;
-        
-        return parent; // return the parent to build the expression with from now on
+    }
+    
+    /// @desc Performs final wrap-up tasks before closing the expression builder group.
+    static complete_close = function() {
+        throw EvarrException.not_implemented(self, nameof(complete));
     }
 }

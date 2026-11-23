@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ctor_EvarrGrammarOperator",
   "parent":{
-    "name":"Building",
-    "path":"folders/_Packages/Alphish/Evarr/Building.yy",
+    "name":"Grammar",
+    "path":"folders/_Packages/Alphish/Evarr/Building/Grammar.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
