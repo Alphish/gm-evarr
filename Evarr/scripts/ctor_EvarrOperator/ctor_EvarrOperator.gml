@@ -20,4 +20,8 @@ function EvarrOperator(_symbol, _arity, _coarity) constructor {
     static apply = function(_evaluation) {
         throw EvarrException.not_implemented(self, nameof(apply));
     }
+    
+    static toString = function() {
+        return $"{instanceof(self)} {symbol}";
+    }
 }

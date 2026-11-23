@@ -6,6 +6,12 @@ function EvarrReference() constructor {
         throw EvarrException.not_implemented(self, nameof(get_value));
     }
     
+    /// @desc Retrieves the referenced value bound to applicable context.
+    /// @returns {Function}
+    static get_method = function() {
+        throw EvarrException.not_implemented(self, nameof(get_method));
+    }
+    
     /// @desc Assigns a new value to the referenced variable.
     /// @arg {Any} value            The new value to assign.
     static set_value = function(_value) {

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ctor_EvarrMemberReference",
   "parent":{
-    "name":"State",
-    "path":"folders/_Packages/Alphish/Evarr/State.yy",
+    "name":"References",
+    "path":"folders/_Packages/Alphish/Evarr/References.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
