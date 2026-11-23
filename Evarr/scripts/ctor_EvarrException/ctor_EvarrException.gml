@@ -26,6 +26,17 @@ EvarrException.not_implemented = function(_context, _method) {
         );
 }
 
+/// @desc Creates an Evarr method not supported exception, thrown when the given operation is not applicable for the given type.
+/// @arg {Struct} context               The instance whose method is not supported.
+/// @arg {String} method                The name of the method not supported by the given type.
+/// @returns {Struct.EvarrException}
+EvarrException.not_supported = function(_context, _method) {
+    return new EvarrException(
+        nameof(not_supported),
+        $"{instanceof(_context)}.{_method} is not supported."
+        );
+}
+
 /// @desc Creates an Evarr operand stack empty exception, thrown when an operator requests an operand when no more are available.
 /// @returns {Struct.EvarrException}
 EvarrException.operand_stack_empty = function() {
@@ -74,7 +85,7 @@ EvarrException.grammar_unknown_operator = function(_symbol) {
         );
 }
 
-/// @desc Creates an Evarr builder unclosed group exception, thrown when completing an exception before closing all of nested groups.
+/// @desc Creates an Evarr builder unclosed group exception, thrown when completing an expression before closing all of nested groups.
 /// @returns {Struct.EvarrException}
 EvarrException.builder_unclosed_group = function() {
     return new EvarrException(
@@ -103,22 +114,14 @@ EvarrException.builder_balance_insufficient_values = function(_arity, _balance) 
         );
 }
 
-/// @desc Creates an Evarr builder expression closing balance exception, thrown when the values stack size at the end of the expression is more than 1.
-/// @arg {Real} balance                 The expected stack size at the end of expression.
+/// @desc Creates an Evarr builder invalid close balance exception, thrown when the calculated stack size at the end of the expression stack doesn't match expectations.
+/// @arg {Struct.EvarrBuilderGroup} group   The expression group with the invalid stack balance.
+/// @arg {String} expected                  The expected terms stack balance at the end of the expression group.
+/// @arg {Real} actual                      The computed terms stack balance.
 /// @returns {Struct.EvarrException}
-EvarrException.builder_balance_closing_expression = function(_balance) {
+EvarrException.builder_balance_invalid_close = function(_group, _expected, _actual) {
     return new EvarrException(
-        nameof(builder_balance_closing_expression),
-        $"The expected stack size at the end of the top-level expression group is {_balance}, when it should be no more than one."
-        );
-}
-
-/// @desc Creates an Evarr builder group closing balance exception, thrown when the values stack size at the end of a nested expression group is other than 1.
-/// @arg {Real} balance                 The expected stack size at the end of expression.
-/// @returns {Struct.EvarrException}
-EvarrException.builder_balance_closing_group = function(_balance) {
-    return new EvarrException(
-        nameof(builder_balance_closing_group),
-        $"The expected stack size at the end of a nested expression group is {_balance}, when it should be exactly one."
+        nameof(builder_balance_invalid_close),
+        $"Invalid stack balance when closing/separated {instanceof(_group)}: Expected the expression group to be closed/separated with the balance of {_expected}, but got {_actual}."
         );
 }

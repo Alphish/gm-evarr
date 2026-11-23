@@ -63,31 +63,32 @@ function EvarrGrammar() constructor {
         return operators_by_symbol[$ _symbol];
     }
     
-    /// @desc Defines a grammar primary operator with a given type.
+    // -----------------
+    // Generic operators
+    // -----------------
+    
+    /// @desc Defines a primary grammar operator with a given type.
     /// @arg {Struct.EvarrOperator} operator        The underlying expression operator to use in the grammar.
     /// @arg {String} type                          The type of the grammar operator.
     /// @returns {Struct.EvarrGrammar}
     static with_primary_operator = function(_operator, _type = "primary") {
-        // primary operators are resolved immediately, and as such are not subject to operator precedence
-        var _grammar_operator = new EvarrGrammarPrimaryOperator(self, _operator, _type, /* precedence */ infinity);
+        // primary operators are resolved immediately
+        // as such, they are not subject to operator precedence
+        var _grammar_operator = new EvarrGrammarPrimaryOperator(self, _operator, _type);
         operators_by_symbol[$ _operator.symbol] = _grammar_operator;
         return self;
     }
     
-    /// @desc Defines a direct value reference operator within the grammar.
-    /// @arg {String} [symbol]                      The symbol to associate the direct reference operator with.
+    /// @desc Defines a sequence grammar operator with a given type, i.e. an operator that processes a nested sequence of terms.
+    /// @arg {Struct.EvarrOperator} operator        The underlying expression operator to use in the grammar.
+    /// @arg {String} type                          The type of the grammar operator.
     /// @returns {Struct.EvarrGrammar}
-    static with_direct_reference_operator = function(_symbol = "@") {
-        _operator = new EvarrDirectReferenceOperator(_symbol);
-        return with_primary_operator(_operator);
-    }
-    
-    /// @desc Defines a member access operator within the grammar.
-    /// @arg {String} [symbol]                      The symbol to associate the member access operator with.
-    /// @returns {Struct.EvarrGrammar}
-    static with_member_access_operator = function(_symbol = ".") {
-        _operator = new EvarrMemberAccessOperator(_symbol);
-        return with_primary_operator(_operator);
+    static with_sequence_operator = function(_operator, _type = "primary") {
+        // sequence operators are resolved at the end of expression builder group rather than within it
+        // as such, they are not subject to operator precedence
+        var _grammar_operator = new EvarrGrammarSequenceOperator(self, _operator, _type);
+        operators_by_symbol[$ _operator.symbol] = _grammar_operator;
+        return self;
     }
     
     /// @desc Defines a grammar operator with a given type. Optionally, the precedence may be specified.
@@ -146,6 +147,39 @@ function EvarrGrammar() constructor {
         return self;
     }
     
+    // -------
+    // Presets
+    // -------
+    
+    /// @desc Defines a direct value reference operator within the grammar.
+    /// @arg {String} [symbol]                      The symbol to associate the direct reference operator with.
+    /// @returns {Struct.EvarrGrammar}
+    static with_direct_reference_operator = function(_symbol = "@") {
+        var _operator = new EvarrDirectReferenceOperator(_symbol);
+        return with_primary_operator(_operator);
+    }
+    
+    /// @desc Defines a member access operator within the grammar.
+    /// @arg {String} [symbol]                      The symbol to associate the member access operator with.
+    /// @returns {Struct.EvarrGrammar}
+    static with_member_access_operator = function(_symbol = ".") {
+        var _operator = new EvarrMemberAccessOperator(_symbol);
+        return with_primary_operator(_operator);
+    }
+    
+    /// @desc Defines a method call operator within the grammar.
+    /// @arg {String} [symbol]                      The symbol to associate the method call operator with.
+    /// @returns {Struct.EvarrGrammar}
+    static with_call_operator = function(_symbol = "(...)") {
+        var _operator = new EvarrVariadicApplyOperator(_symbol, function(_source, _evaluation, _arity) {
+            var _mtd = _source.get_method();
+            var _operands = _evaluation.operand_stack;
+            var _operands_from = _evaluation.operand_stack_count - _arity;
+            return _arity > 0 ? method_call(_mtd, _operands, _operands_from, _arity) : _mtd();
+        });
+        return with_sequence_operator(_operator, /* allow empty */ true);
+    }
+
     /// @desc Defines the minus sign operator within the grammar. If needed, the corresponding layer is declared.
     /// @arg {String} [type]                        The type/precedence layer of the operator; "unary" by default.
     /// @returns {Struct.EvarrGrammar}

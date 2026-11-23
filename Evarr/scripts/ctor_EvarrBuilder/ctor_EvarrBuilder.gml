@@ -12,7 +12,7 @@ function EvarrBuilder(_grammar) constructor {
     expression = [];
     
     /// @ignore
-    current_group = new EvarrBuilderGroup(undefined, expression);
+    current_group = new EvarrBuilderRoot(expression);
     
     /// @desc Inputs a value to be added to the stack.
     /// @arg {Any} value        The value to add.
@@ -80,13 +80,26 @@ function EvarrBuilder(_grammar) constructor {
     /// @desc Begins a nested expression group, creating a new context for resolving operators. It's conceptually similar to parentheses in arithmetic/programming expressions.
     /// @returns {Struct.EvarrBuilder}
     static open_group = function() {
-        current_group = current_group.open_nested();
+        current_group = current_group.open_subexpression();
+        return self;
+    }
+    
+    /// @arg {String} symbol
+    static open_apply = function(_symbol) {
+        var _operator = grammar.get_operator(_symbol);
+        current_group = current_group.open_apply(_operator);
+        return self;
+    }
+    
+    /// @desc Separates the current subexpression from a subsequent one. Only applicable in certain builder groups.
+    static separate = function() {
+        current_group.separate();
         return self;
     }
     
     /// @desc Closes the nested expression group, going back to its outer group.
     /// @returns {Struct.EvarrBuilder}
-    static close_group = function() {
+    static close = function() {
         if (is_undefined(current_group.parent))
             throw EvarrException.builder_unmatched_group_close();
         

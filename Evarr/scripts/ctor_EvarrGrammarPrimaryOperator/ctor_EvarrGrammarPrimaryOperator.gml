@@ -2,8 +2,7 @@
 /// @arg {Struct.EvarrGrammar} grammar          The grammar the operator is defined for.
 /// @arg {Struct.EvarrOperator} exoperator      The underlying expression operator.
 /// @arg {String} type                          The type of the operator
-/// @arg {Real} precedence                      The precedence of the operator.
-function EvarrGrammarPrimaryOperator(_grammar, _exoperator, _type, _precedence) : EvarrGrammarOperator(_grammar, _exoperator, _type, _precedence, /* right-associative */ false) constructor {
+function EvarrGrammarPrimaryOperator(_grammar, _exoperator, _type) : EvarrGrammarOperator(_grammar, _exoperator, _type, infinity, /* right-associative */ false) constructor {
     /// @desc Performs immediate operator preparations to keep track of the operator skip argument position.
     /// @arg {Struct.EvarrBuilderGroup} buildgroup      The Evarr builder group the operator will be resolved for.
     static prepare = function(_buildgroup) {

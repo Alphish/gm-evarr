@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ctor_EvarrGrammarSequenceOperator",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ctor_EvarrGrammarSequenceOperator",
+  "parent":{
+    "name":"Grammar",
+    "path":"folders/_Packages/Alphish/Evarr/Building/Grammar.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
